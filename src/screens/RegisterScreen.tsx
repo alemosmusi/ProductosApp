@@ -1,14 +1,18 @@
-import React from 'react'
-import { Keyboard, KeyboardAvoidingView, Platform, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import React, { useContext, useEffect } from 'react'
+import { Alert, Keyboard, KeyboardAvoidingView, Platform, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { loginStyles } from '../theme/loginTheme'
 import { WhiteLogo } from '../components/WhiteLogo'
 import { useForm } from '../hooks/useForm'
 import { StackScreenProps } from '@react-navigation/stack'
+import { AuthContext } from '../context/AuthContext'
 
 
 interface Props extends StackScreenProps<any, any>{}
 
 export const RegisterScreen = ({navigation}: Props) => {
+
+
+  const { singUp, errorMessage, removeError } = useContext(AuthContext)
 
 
 
@@ -18,9 +22,31 @@ export const RegisterScreen = ({navigation}: Props) => {
     password: ''
   })
 
+  useEffect(() => {
+    if(errorMessage.length === 0){
+      return
+    }else{
+      Alert.alert(
+        'Login incorrecto',
+         errorMessage,
+         [
+          {
+            text: 'Ok',
+            onPress: removeError
+          }
+         ]
+         )
+    }
+  }, [errorMessage])
+
   const onRegister = ()=>{
     console.log({email, password})
     Keyboard.dismiss()
+    singUp({
+      nombre: name,
+      correo: email,
+      password
+    })
   }
 
 

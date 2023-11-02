@@ -15,6 +15,7 @@ type AuthAction =
     | {type: 'removeError'}
     | {type: 'notAuthenticated'}
     | {type: 'logout'}
+    | {type: 'check'}
 
 
 
@@ -31,6 +32,12 @@ export const authReducer = (state: AuthState, action: AuthAction): AuthState =>{
                 token: null,
                 errorMessage: action.payload
             }
+        // case 'check':
+            
+        //     return {
+        //         ...state,
+        //         status: 'checking'
+        //     }
         
         case 'removeError':
             return {
