@@ -1,5 +1,5 @@
 import { createContext, useEffect, useState } from "react";
-import { Producto, ProductsResponse } from "../interfaces/appInterfaces";
+import { Producto, ProductsResponse } from '../interfaces/appInterfaces';
 import cafeApi from "../api/cadeApi";
 
 
@@ -46,8 +46,10 @@ export const ProductsProvider = ({children}:any)=>{
     const deleteProduct = async(id: string) => {
 
     }
-    const loadProductById = async(id: string) => {
-        throw new Error('not')
+    const loadProductById = async(id: string):Promise<Producto> => {
+        const resp = await cafeApi.get<Producto>(`/productos/${id}`)
+        return resp.data
+
     }
     const uploadImage = async(data: any, id:string) => {
 
