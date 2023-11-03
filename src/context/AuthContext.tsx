@@ -17,7 +17,7 @@ type AuthContextProps = {
 }
 
 const authInicialState: AuthState = {
-    status: 'checking',
+    status: 'not-authenticated',
     token: null,
     user: null,
     errorMessage: ''

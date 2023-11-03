@@ -1,10 +1,11 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { createStackNavigator } from '@react-navigation/stack';
 import { LoginScreen } from '../screens/LoginScreen';
 import { RegisterScreen } from '../screens/RegisterScreen';
 import { ProtectedScreen } from '../screens/ProtectedScreen';
 import { AuthContext } from '../context/AuthContext';
 import { LoadingScreen } from '../screens/LoadingScreen';
+import { ProductsNavigator } from './ProductsNavigator';
 
 const Stack = createStackNavigator();
 
@@ -13,7 +14,18 @@ export const Navigator = ()=> {
 
   const {status} = useContext(AuthContext)
 
-  // if(status === 'checking')return <LoadingScreen />
+
+
+
+  // useEffect(() => {
+  //   if(status === 'checking'){chekeando}
+
+  // }, [status])
+
+  // const chekeando = ()=>{
+  //   return <LoadingScreen />
+  // }
+
 
 
 
@@ -27,7 +39,7 @@ export const Navigator = ()=> {
         }}
     >
       {
-        (status !== 'authenticated') 
+        (status !== 'authenticated')
           ? (
             <>
               <Stack.Screen name="LoginScreen" component={LoginScreen} />
@@ -36,7 +48,10 @@ export const Navigator = ()=> {
             </>
           )
           :(
-            <Stack.Screen name="ProtectedScreen" component={ProtectedScreen} />
+            <>
+              <Stack.Screen name="ProductsNavigator" component={ProductsNavigator} />
+              <Stack.Screen name="ProtectedScreen" component={ProtectedScreen} />
+            </>
 
           )
       }
