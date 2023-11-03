@@ -8,7 +8,7 @@ export type ProductsStackParams = {
     ProductScreen: {id?:string, name?:string}
 }
 
-const Stack = createStackNavigator()
+const Stack = createStackNavigator<ProductsStackParams>()
 
 
 
