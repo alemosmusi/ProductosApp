@@ -1,5 +1,5 @@
-import React, { useContext, useEffect, useState } from 'react'
-import { Button, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native'
+import React, { useContext, useEffect } from 'react'
+import { Button, Image, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native'
 import { StackScreenProps } from '@react-navigation/stack'
 import { ProductsStackParams } from '../navigator/ProductsNavigator'
 import {Picker} from '@react-native-picker/picker';
@@ -17,7 +17,7 @@ export const ProductScreen = ({navigation, route}:Props) => {
   const { id = '', name = ''} = route.params
 
   const {categories, isLoading} = useCategories()
-  const {loadProductById}= useContext(ProductsContext)
+  const {loadProductById, addProduct, updateProduct}= useContext(ProductsContext)
 
   const { _id, categoriaId, nombre, img, form, onChange, setFormValue} = useForm({
     _id: id,
@@ -26,16 +26,14 @@ export const ProductScreen = ({navigation, route}:Props) => {
     img: ''
   })
 
-  const [selectedLanguage, setSelectedLanguage] = useState();
-
 
   useEffect(() => {
     
     navigation.setOptions({
-      title: (name) ? name : 'Nuevo Producto'
+      title: (nombre) ? nombre : 'Nuevo Producto'
     })
 
-  }, [])
+  }, [nombre])
 
 
 
@@ -58,6 +56,22 @@ export const ProductScreen = ({navigation, route}:Props) => {
       nombre
     })
   }
+
+  const saveOrUpdate = async()=>{
+    if(id.length > 0){
+      updateProduct(categoriaId,nombre,id)
+      
+    }else{
+      if( categoriaId.length === 0){
+        onChange(categories[0]._id, 'categoriaId')
+      }
+
+      const tempCategoriaId = categoriaId || categories[0]._id
+      const newProduct = await addProduct(tempCategoriaId, nombre)
+      onChange(newProduct._id, '_id')
+      
+    }
+  }
   
 
 
@@ -78,9 +92,9 @@ export const ProductScreen = ({navigation, route}:Props) => {
         <Text style={styles.label}>Categoria:</Text>
 
         <Picker
-          selectedValue={selectedLanguage}
-          onValueChange={(itemValue, itemIndex) =>
-            setSelectedLanguage(itemValue)
+          selectedValue={categoriaId}
+          onValueChange={(itemValue) =>
+            onChange(itemValue, 'categoriaId')
           }>
             {
               categories.map(c=>(
@@ -92,30 +106,48 @@ export const ProductScreen = ({navigation, route}:Props) => {
 
         <Button 
             title='Guardar'
-            onPress={()=>{}}
+            onPress={saveOrUpdate}
             color="#5856D6"
           />
 
-        <View style={{flexDirection: 'row', justifyContent:'center', marginTop:10}}>
+          {
+            (_id.length > 0) && (
+              <View style={{flexDirection: 'row', justifyContent:'center', marginTop:10}}>
 
 
-          <Button 
-            title='Camara'
-            onPress={()=>{}}
-            color="#5856D6"
-          />
-          <View style={{width:10}} />
-          <Button 
-            title='Galeria'
-            onPress={()=>{}}
-            color="#5856D6"
-          />
+                <Button 
+                  title='Camara'
+                  onPress={()=>{}}
+                  color="#5856D6"
+                />
+                <View style={{width:10}} />
+                <Button 
+                  title='Galeria'
+                  onPress={()=>{}}
+                  color="#5856D6"
+                />
 
-        </View>
+              </View>
 
-        <Text>
-          {JSON.stringify(form, null, 5)}
-        </Text>
+            )
+          }
+
+
+
+
+        {
+          (img.length > 0) && (
+            <Image 
+              source={{uri: img}}
+              style={{
+                marginTop: 20,
+                width: '100%',
+                height: 300
+              }}
+            />
+
+          )
+        }
 
 
       </ScrollView>
